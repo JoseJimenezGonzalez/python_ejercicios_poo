@@ -1,29 +1,28 @@
 from urllib import request
 from json import loads
 
-tipo_moneda = input("Introduce tipo de moneda que puede ser: DOLARES, EUROS ó LIBRAS")
-cantidad_bitcoins = float(input("Introduce la cantidad de bitcoins que tienes"))
+url = "https://api.coindesk.com/v1/bpi/currentprice.json"
+f = request.urlopen(url)
+datos_json = f.read().decode("utf-8")
+datos_diccionario = loads(datos_json)['bpi']
 
-codigo_moneda_usuario = ""
-mensaje = ""
+moneda_usuario = input("Introduce DOLARES, EUROS ó LIBRAS")
 
-if tipo_moneda.upper() == "DOLARES":
-    codigo_moneda_usuario = "USD"
-elif tipo_moneda.upper() == "EUROS":
-    codigo_moneda_usuario = "EUR"
-elif tipo_moneda.upper() == "LIBRAS":
-    codigo_moneda_usuario = "GBP"
+if(moneda_usuario.upper() == "DOLARES"):
+    codigo = "USD"
+elif(moneda_usuario.upper() == "EUROS"):
+    codigo = "EUR"
+elif(moneda_usuario.upper() == "LIBRAS"):
+    codigo = "GBP"
 else:
+    codigo = ""
+if(codigo == ""):
     print("No has introducido una moneda correcta")
+else:
+    cantidad_bitcoins = float(input("Introduce cantidad de bitcoins"))
+    equivalencia = datos_diccionario[codigo]['rate_float']
+    cantidad_equivalente = equivalencia * cantidad_bitcoins
+    print(f"{cantidad_bitcoins} bitcoins equivalen a {cantidad_equivalente} de {moneda_usuario}")
 
-if codigo_moneda_usuario != "":
-    url = "https://api.coindesk.com/v1/bpi/currentprice.json"
-    f = request.urlopen(url)
-    datos_json = f.read().decode("utf-8")
-    datos_diccionario = loads(datos_json)
-    equivalencia = datos_diccionario['bpi'][codigo_moneda_usuario]['rate_float']
-    cantidad = cantidad_bitcoins * equivalencia
-    mensaje = f"{cantidad_bitcoins} bitcoins equivalen a {cantidad} {tipo_moneda}"
-    print(mensaje)
 
 

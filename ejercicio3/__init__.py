@@ -19,14 +19,11 @@ frutas = [
 ]
 
 archivo_csv_destino = "frutas.csv"
-with open(archivo_csv_destino, mode='w', newline='') as file:
-    # Definir los encabezados en mayúsculas y separados por ;
-    encabezados = frutas[0].keys()
-    # Crear un escritor de CSV
-    escritor_csv = csv.DictWriter(file, fieldnames=encabezados, delimiter=';')
-    # Escribir los encabezados en el archivo
-    escritor_csv.writeheader()
-    #Escribir las filas en el archivo
+with open(archivo_csv_destino, "w", newline="") as csvfile:
+
+    writer = csv.writer(csvfile, delimiter=";")
+
+    writer.writerow(["NOMBRE", "PRECIO", "CATEGORIA"])
+
     for fruta in frutas:
-        escritor_csv.writerow(fruta)
-print(f"El archivo '{archivo_csv_destino}' ha sido creado con éxito.")
+        writer.writerow([fruta["nombre"], fruta["precio"], fruta["categoria"]])

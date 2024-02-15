@@ -5,7 +5,6 @@
 #método comprar devuelve un float con el precio multiplicado por la unidades
 #que se quiere llevar. Si al comprar se lleva más de 50 unidades el precio final
 #se reduce a la mitad.
-
 class Producto:
     def __init__(self, nombre, identificador, precio):
         self._nombre = nombre
@@ -16,12 +15,10 @@ class Producto:
     def __eq__(self, other):
         return self._identificador == other._identificador
     def comprar(self, unidades):
+        importe_compra = unidades * self._precio
         if(unidades > 50):
-            precio = unidades * self._precio / 2
-        else:
-            precio = unidades * self._precio
-        return precio
-
+            importe_compra /= 2
+        return importe_compra
 #b) Crear la clase Perecedero que hereda de Producto. Se añade un atributo
 #más que es los días para caducar. Hay que hacer el método __str__. El método
 #comprar es similar al de producto solo que le reduce el precio calculado en la
@@ -38,15 +35,16 @@ class Perecedero(Producto):
     def __str__(self):
         return f"Nombre: {self._nombre}, identificador: {self._identificador}, precio: {self._precio} y dias para caducar: {self._dias_caducar}"
     def comprar(self, unidades):
+        importe_compra = super().comprar(unidades)
         if(self._dias_caducar == 1):
-            precio = super().comprar(unidades)/4
+            importe_compra /= 4
         elif(self._dias_caducar == 2):
-            precio = super().comprar(unidades) / 3
-        elif(self._dias_caducar == 3):
-            precio = super().comprar(unidades) / 2
-        else:
-            precio = super().comprar(unidades)
-        return precio
+            importe_compra /= 3
+        elif (self._dias_caducar == 3):
+            importe_compra /= 2
+        return importe_compra
+
+
 #c) Crear la clase Tienda como se describe a continuación:
 #o La clase tiene 1 atributo que es una lista que está inicialmente vacía.
 #o La clase tendrá un método para añadir objetos de las clases anteriores
@@ -57,20 +55,23 @@ class Perecedero(Producto):
 #Perecedero), llamando al método __str__ correspondiente.
 class Tienda:
     def __init__(self):
-        self._lista_productos = []
-
-    def nuevo_producto(self, producto):
-        self._lista_productos.append(producto)
-
+        self.lista_productos = []
+    def agregarProducto(self, producto):
+        self.lista_productos.append(producto)
     def __str__(self):
-        res = ""
-        for producto in self._lista_productos:
-            res += producto.__str__() + "\n"
-        return res
+        mensaje = ""
+        for producto in self.lista_productos:
+            mensaje += f"{producto.__str__()}\n"
+        return mensaje
+
+
+producto1 = Producto("Manzanas", "123ABC", 2.5)
+producto2 = Producto("Peras", "456DEF", 3.0)
+producto3 = Perecedero("Leche", "789GHI", 1.5, 2)
 
 tienda = Tienda()
-producto1 = Producto("Camisa", "A001", 20)
-perecedero1 = Perecedero("Leche", "P001", 2, 3)
-tienda.nuevo_producto(producto1)
-tienda.nuevo_producto(perecedero1)
+tienda.agregarProducto(producto1)
+tienda.agregarProducto(producto2)
+tienda.agregarProducto(producto3)
+
 print(tienda)
